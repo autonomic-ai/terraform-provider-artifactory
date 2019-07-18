@@ -3,11 +3,12 @@ package artifactory
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform/helper/resource"
 	"net/http"
 
+	"github.com/hashicorp/terraform/helper/resource"
+
 	"github.com/atlassian/go-artifactory/v2/artifactory"
-	"github.com/atlassian/go-artifactory/v2/artifactory/v1"
+	v1 "github.com/atlassian/go-artifactory/v2/artifactory/v1"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -102,6 +103,10 @@ func resourceGroupCreate(d *schema.ResourceData, m interface{}) error {
 
 		if resp.StatusCode == http.StatusNotFound {
 			return resource.RetryableError(fmt.Errorf("expected group to be created, but currently not found"))
+		}
+
+		if resp.StatusCode == http.StatusBadRequest {
+			return resource.RetryableError(fmt.Errorf("expected group to be created, but received a bad request error"))
 		}
 
 		return resource.NonRetryableError(resourceGroupRead(d, m))

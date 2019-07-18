@@ -3,8 +3,9 @@ package artifactory
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform/helper/resource"
 	"net/http"
+
+	"github.com/hashicorp/terraform/helper/resource"
 
 	"github.com/atlassian/go-artifactory/v2/artifactory"
 	v2 "github.com/atlassian/go-artifactory/v2/artifactory/v2"

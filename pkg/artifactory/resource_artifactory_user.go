@@ -5,10 +5,11 @@ import (
 	"crypto/md5"
 	"encoding/base64"
 	"fmt"
-	"github.com/hashicorp/terraform/helper/resource"
 	"math/rand"
 	"net/http"
 	"os"
+
+	"github.com/hashicorp/terraform/helper/resource"
 
 	"github.com/atlassian/go-artifactory/v2/artifactory"
 	v1 "github.com/atlassian/go-artifactory/v2/artifactory/v1"
@@ -145,6 +146,10 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 
 		if resp.StatusCode == http.StatusNotFound {
 			return resource.RetryableError(fmt.Errorf("expected user to be created, but currently not found"))
+		}
+
+		if resp.StatusCode == http.StatusBadRequest {
+			return resource.RetryableError(fmt.Errorf("expected group to be created, but received a bad request error"))
 		}
 
 		return resource.NonRetryableError(resourceUserRead(d, m))
